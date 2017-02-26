@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="GOPATH &lt;go-mud-actions&gt;">
+    <CLASSES>
+      <root url="file://$USER_HOME$/env/gopath/src/golang.org" />
+      <root url="file://$USER_HOME$/env/gopath/src/gopkg.in" />
+      <root url="file://$USER_HOME$/env/gopath/src/honnef.co" />
+      <root url="file://$USER_HOME$/env/gopath/src/github.com" />
+    </CLASSES>
+    <SOURCES>
+      <root url="file://$USER_HOME$/env/gopath/src/golang.org" />
+      <root url="file://$USER_HOME$/env/gopath/src/gopkg.in" />
+      <root url="file://$USER_HOME$/env/gopath/src/honnef.co" />
+      <root url="file://$USER_HOME$/env/gopath/src/github.com" />
+    </SOURCES>
+    <excluded>
+      <root url="file://$PROJECT_DIR$" />
+    </excluded>
+  </library>
+</component>

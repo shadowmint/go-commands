@@ -1,0 +1,33 @@
+{
+  "name": "go-commands",
+  "version": "1.0.0",
+  "description": "A generic commands framework",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shadowmint/go-commands.git"
+  },
+  "files": [
+    "index.js",
+    "scripts",
+    "src"
+  ],
+  "author": "douglas.linder@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shadowmint/go-commands/issues"
+  },
+  "homepage": "https://github.com/shadowmint/go-commands",
+  "scripts": {
+    "test": "go test -v ./src/ntoolkit/...",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "dependencies": {
+    "go-assert": "github:shadowmint/go-assert",
+    "go-events": "github:shadowmint/go-events#1.0.0",
+    "go-futures": "github:shadowmint/go-futures",
+    "go-registry": "github:shadowmint/go-registry",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0"
+  }
+}
