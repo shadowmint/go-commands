@@ -8,6 +8,7 @@ import (
 	"ntoolkit/errors"
 	"ntoolkit/futures"
 	"ntoolkit/registry"
+	"sync"
 )
 
 // Commands is a high level construct for dispatching commands and registering command handlers.
@@ -46,28 +47,29 @@ func (c *Commands) Register(handler CommandHandler) error {
 
 // Wait for a command to finish and return an error if it fails
 func (c *Commands) Wait(command Command) error {
-	promise, err := c.Execute(command)
-	if err != nil {
-		return err
-	}
-
-	done := make(chan error)
-	go func(done chan error) {
+	var err error
+	promise := c.Execute(command)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
 		promise.Then(func() {
-			done <- nil
-		}, func(err error) {
-			done <- err
+			wg.Done()
+		}, func(cmdErr error) {
+			err = cmdErr
+			wg.Done()
 		})
-	}(done)
-	failure := <-done
-	return failure
+	}()
+	return err
 }
 
 // Execute a command and return an error if it failed
-func (c *Commands) Execute(command Command) (*futures.Deferred, error) {
+func (c *Commands) Execute(command Command) *futures.Deferred {
+	rtn := &futures.Deferred{}
 	if command == nil {
-		return nil, errors.Fail(ErrNoHandler{}, nil, "No command handler for nil")
+		rtn.Reject(errors.Fail(ErrNoHandler{}, nil, "No command handler for nil"))
+		return rtn
 	}
+
 	if handler, ok := c.handlers[reflect.TypeOf(command)]; ok {
 		if setup, ok := command.(Setup); ok {
 			setup.Setup()
@@ -79,9 +81,11 @@ func (c *Commands) Execute(command Command) (*futures.Deferred, error) {
 			timeout = timeoutRef.Timeout()
 		}
 
-		return c.executeTimed(command, handler, timeout), nil
+		return c.executeTimed(command, handler, timeout)
 	}
-	return nil, errors.Fail(ErrNoHandler{}, nil, fmt.Sprintf("No command handler found for unknown type: %s", reflect.TypeOf(command)))
+
+	rtn.Reject(errors.Fail(ErrNoHandler{}, nil, fmt.Sprintf("No command handler found for unknown type: %s", reflect.TypeOf(command))))
+	return rtn
 }
 
 // executeTimed returns a promise for command execution that invokes the
