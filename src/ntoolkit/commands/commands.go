@@ -59,6 +59,7 @@ func (c *Commands) Wait(command Command) error {
 			wg.Done()
 		})
 	}()
+	wg.Wait()
 	return err
 }
 

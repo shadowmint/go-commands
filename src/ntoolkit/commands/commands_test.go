@@ -19,7 +19,7 @@ func TestNew(T *testing.T) {
 	})
 }
 
-func TestBoundCommandHandlerInvoked(T *testing.T) {
+func TestOnlyBoundCommandHandlerInvoked(T *testing.T) {
 	assert.Test(T, func(T *assert.T) {
 		instance := commands.New()
 		instance.Register(&FooCommandHandler{})
@@ -48,9 +48,7 @@ func TestAsyncCommand(T *testing.T) {
 
 		cmd := newBarCommand()
 
-		promise, err := instance.Execute(cmd)
-		T.Assert(err == nil)
-
+		promise := instance.Execute(cmd)
 		promise.Then(func() {
 			T.Assert(cmd.Success)
 		}, func(err error) {
